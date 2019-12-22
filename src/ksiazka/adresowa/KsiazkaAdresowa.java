@@ -14,6 +14,7 @@ public class KsiazkaAdresowa {
     /**
      * @param args the command line arguments
      */
+	// TODO use java.util.prefs to get paths for directories for storing data
     public static void main(String[] args) {
         // TODO code application logic here
         System.out.println("Hello world");
