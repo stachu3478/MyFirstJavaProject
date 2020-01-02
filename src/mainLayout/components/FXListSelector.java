@@ -54,4 +54,8 @@ public class FXListSelector<T, V extends SelectorReceiver<T>> {
     public ListView getListView() {
         return listView;
     }
+    
+    public void refresh() {
+        listView.refresh();
+    }
 }

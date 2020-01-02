@@ -9,7 +9,7 @@ package mainLayout;
  *
  * @author stachu
  */
-class PostOffice {
+public class PostOffice {
     private City city;
     private Integer postalCode;
     

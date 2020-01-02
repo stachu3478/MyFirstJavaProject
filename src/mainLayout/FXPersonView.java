@@ -10,21 +10,16 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.Tooltip;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import mainLayout.components.FXListSelector;
 import mainLayout.components.SelectorReceiver;
+import mainLayout.components.StandardGridPane;
 
 /**
  *
@@ -33,7 +28,10 @@ import mainLayout.components.SelectorReceiver;
 public class FXPersonView extends Application implements SelectorReceiver<Person> {
     private Stage stage;
     
+    private Person shownPerson;
+    
     private FXPhoneView numberView;
+    private FXEditPersonView editView;
     
     private Label firstNameLabel;
     private Label lastNameLabel;
@@ -48,17 +46,33 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
     private Button addPhoneNumberBtn;
     private Button removePhoneNumberBtn;
     
-    private int selectedContact;
-    private boolean doubleClick;
-    
     private GridPane root;
     private Scene scene;
     
     @Override
     public void start(Stage primaryStage) {
+        
+        EventHandler<ActionEvent> updateHandler = new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) {
+                System.out.println("Updating interface...");
+                contacts.refresh();
+                firstNameValue.setText(shownPerson.getFirstName());
+                lastNameValue.setText(shownPerson.getLastName());
+                stage.setTitle(shownPerson.getFullName() + " - Information");
+                addressText.setText(shownPerson.getAddressString());
+            }
+        };
+        
         stage = primaryStage;
         numberView = new FXPhoneView();
+        numberView.setOnUpdate(updateHandler);
         numberView.start(new Stage());
+        
+        editView = new FXEditPersonView();
+        editView.setOnUpdate(updateHandler);
+        editView.start(new Stage());
         
         firstNameLabel = new Label("First name: ");
         lastNameLabel = new Label("Last name: ");
@@ -69,24 +83,23 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
         lastNameValue = new Text();
         addressText = new Text();
         
-        contacts = new FXListSelector<PhoneNumber, FXPhoneView>();
+        contacts = new FXListSelector<>();
         ObservableList<PhoneNumber> numbers = FXCollections.observableArrayList(new PhoneNumber(), new PhoneNumber(), new PhoneNumber());
         contacts.setItems(numbers);
         contacts.setTooltip("Click a number to edit it");
         contacts.setReceiver(numberView);
         
-        editPersonButton = new Button();
-        editPersonButton.setText("Edit personal information");
+        editPersonButton = new Button("Edit personal information");
         editPersonButton.setOnAction(new EventHandler<ActionEvent>() {
             
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("Editing person...");
+                editView.receive(shownPerson);
             }
         });
         
-        editAddressButton = new Button();
-        editAddressButton.setText("Edit address");
+        editAddressButton = new Button("Edit address");
         editAddressButton.setOnAction(new EventHandler<ActionEvent>() {
             
             @Override
@@ -95,8 +108,7 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
             }
         });
         
-        addPhoneNumberBtn = new Button();
-        addPhoneNumberBtn.setText("Add phone");
+        addPhoneNumberBtn = new Button("Add phone");
         addPhoneNumberBtn.setOnAction(new EventHandler<ActionEvent>() {
             
             @Override
@@ -105,8 +117,7 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
             }
         });
         
-        removePhoneNumberBtn = new Button();
-        removePhoneNumberBtn.setText("Remove phone");
+        removePhoneNumberBtn = new Button("Remove phone");
         removePhoneNumberBtn.setOnAction(new EventHandler<ActionEvent>() {
             
             @Override
@@ -115,12 +126,7 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
             }
         });
         
-        root = new GridPane();
-        root.setAlignment(Pos.CENTER);
-        root.setHgap(10);
-        root.setVgap(10);
-        root.setPadding(new Insets(15, 15, 15, 15));
-        
+        root = new StandardGridPane();
         root.add(firstNameLabel, 0, 0);
         root.add(firstNameValue, 1, 0);
         root.add(lastNameLabel, 0, 1);
@@ -145,6 +151,7 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
             public void handle(WindowEvent event) {
                 System.out.println("Stage is closing");
                 numberView.stop();
+                editView.stop();
                 stage.close();
             }
         });
@@ -152,12 +159,10 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
     
     @Override
     public void receive(Person person) {
-        // TODO assign parameters
-        String fName = person.getFirstName();
-        String lName = person.getLastName();
-        firstNameValue.setText(fName);
-        lastNameValue.setText(lName);
-        stage.setTitle(fName + " " + lName + " - Information");
+        this.shownPerson = person;
+        firstNameValue.setText(person.getFirstName());
+        lastNameValue.setText(person.getLastName());
+        stage.setTitle(person.getFullName() + " - Information");
         addressText.setText(person.getAddressString());
         stage.show();
     }

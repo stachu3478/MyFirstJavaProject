@@ -6,27 +6,23 @@ package mainLayout;
  * and open the template in the editor.
  */
 
-import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import javafx.scene.control.ListView;
 import javafx.scene.control.Tooltip;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.image.Image;
 import javafx.stage.WindowEvent;
+import mainLayout.components.FXListSelector;
+import mainLayout.components.StandardGridPane;
 
 /**
  *
@@ -35,13 +31,10 @@ import javafx.stage.WindowEvent;
 public class FXContactView extends Application {
     private FXPersonView personView;
     
-    private ListView<String> contactList;
+    private FXListSelector<Person, FXPersonView> contactList;
     private Label searchText;
     private TextField searchInput;
     private Button searchButton;
-    
-    private int selectedContact;
-    private boolean doubleClick;
     
     private GridPane root;
     private Scene scene;
@@ -51,6 +44,12 @@ public class FXContactView extends Application {
         
         personView = new FXPersonView();
         personView.start(new Stage());
+        
+        contactList = new FXListSelector<Person, FXPersonView>();
+        ObservableList<Person> people = FXCollections.observableArrayList(new Person(), new Person(), new Person());
+        contactList.setItems(people);
+        contactList.setTooltip("Click a contact to see details");
+        contactList.setReceiver(personView);
         
         // TODO Add search contacts text
         searchText = new Label("Search contacts: ");
@@ -69,9 +68,8 @@ public class FXContactView extends Application {
         });
         
         // Add contacts button
-        searchButton = new Button();
+        searchButton = new Button("Add new contact");
         searchButton.getStyleClass().add("search-button");
-        searchButton.setText("Add new contact");
         searchButton.setOnAction(new EventHandler<ActionEvent>() {
             
             @Override
@@ -80,47 +78,20 @@ public class FXContactView extends Application {
             }
         });
         
-        // TODO add found contacts list
-        // add person list member
-        selectedContact = -1;
-        doubleClick = false;
-        contactList = new ListView<String>();
-        ObservableList<String> contacts = FXCollections.observableArrayList("COntact1", "Contact2", "COntact3");
-        contactList.setItems(contacts);
-        contactList.setTooltip(new Tooltip("Click a contact to show it"));
-        contactList.setOnMouseReleased(new EventHandler<MouseEvent>() {
-
-            @Override
-            public void handle(MouseEvent event) {
-                int newContact = contactList.getSelectionModel().getSelectedIndex();
-                if (selectedContact != newContact || doubleClick) {
-                    selectedContact = newContact;
-                    doubleClick = false;
-                    System.out.println("Showing contact details...");
-                    personView.showPerson(new Person());
-                } else if (selectedContact != -1) {
-                    doubleClick = true;
-                }
-            }
-        });
-        
-        root = new GridPane();
-        root.setAlignment(Pos.CENTER);
-        root.setHgap(10);
-        root.setVgap(10);
-        root.setPadding(new Insets(15, 15, 15, 15));
-        
+        root = new StandardGridPane();
         root.add(searchText, 0, 0);
         root.add(searchInput, 1, 0);
-        root.add(contactList, 0, 1, 2, 1);
+        root.add(contactList.getListView(), 0, 1, 2, 1);
         root.add(searchButton, 0, 2);
         
         scene = new Scene(root, 480, 360);
         scene.getStylesheets().add(FXContactView.class.getResource("FXContactView.css").toExternalForm());
         
-        primaryStage.setTitle("Książka adresowa");
+        primaryStage.setTitle("Contacts");
         primaryStage.setScene(scene);
         primaryStage.show();
+        // TODO add some icon
+        // primaryStage.getIcons().add( new Image( FXContactView.class.getResourceAsStream( "icon.png" )));
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             
             @Override

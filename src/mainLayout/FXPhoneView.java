@@ -10,20 +10,22 @@ import static javafx.application.Application.launch;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Tooltip;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import mainLayout.components.SelectorReceiver;
+import mainLayout.components.StandardGridPane;
+import mainLayout.components.UpdateEvent;
 
 /**
  *
@@ -31,13 +33,16 @@ import mainLayout.components.SelectorReceiver;
  */
 public class FXPhoneView extends Application implements SelectorReceiver<PhoneNumber> {
     private Stage stage;
+    private PhoneNumber editNumber;
     
     private Label numberLabel;
     private Label countryLabel;
-    private Text numberValue;
+    private TextField numberValue;
     private ChoiceBox<Country> countryValue;
     private Button saveButton;
     private Button cancelButton;
+    
+    private EventHandler<ActionEvent> updateHandler;
     
     private GridPane root;
     
@@ -48,25 +53,31 @@ public class FXPhoneView extends Application implements SelectorReceiver<PhoneNu
         numberLabel = new Label("Phone number: ");
         countryLabel = new Label("Country: ");
         
-        numberValue = new Text();
+        numberValue = new TextField();
         countryValue = new ChoiceBox();
         ObservableList<Country> countries = FXCollections.observableArrayList(new Country(), new Country(), new Country());
         countryValue.setItems(countries);
         // TODO add countries to choice box
         
-        saveButton = new Button();
-        saveButton.setText("Save");
+        saveButton = new Button("Save");
         saveButton.setOnAction(new EventHandler<ActionEvent>() {
             
             @Override
             public void handle(ActionEvent event) {
-                System.out.println("Saving changes...");
-                stage.close();
+                try {
+                    System.out.println("Saving changes...");
+                    editNumber.setNumber(numberValue.getText());
+                    editNumber.setCountry(countryValue.getValue());
+                    if (updateHandler != null) updateHandler.handle(event);
+                    stage.close();
+                } catch (NumberFormatException e) {
+                    Alert alert = new Alert(AlertType.ERROR, "Entered phone has invalid format. It should consist of 9 digits.", ButtonType.OK);
+                    alert.showAndWait();
+                }
             }
         });
         
-        cancelButton = new Button();
-        cancelButton.setText("Cancel");
+        cancelButton = new Button("Cancel");
         cancelButton.setOnAction(new EventHandler<ActionEvent>() {
             
             @Override
@@ -76,12 +87,7 @@ public class FXPhoneView extends Application implements SelectorReceiver<PhoneNu
             }
         });
         
-        root = new GridPane();
-        root.setAlignment(Pos.CENTER);
-        root.setHgap(10);
-        root.setVgap(10);
-        root.setPadding(new Insets(15, 15, 15, 15));
-        
+        root = new StandardGridPane();
         root.add(numberLabel, 0, 0);
         root.add(countryLabel, 0, 1);
         root.add(numberValue, 1, 0);
@@ -95,8 +101,12 @@ public class FXPhoneView extends Application implements SelectorReceiver<PhoneNu
         primaryStage.setScene(scene);
     }
     
+    public void setOnUpdate(EventHandler<ActionEvent> h) {
+        this.updateHandler = h;
+    }
+    
     public void receive(PhoneNumber number) {
-        // TODO assign parameters
+        this.editNumber = number;
         numberValue.setText(number.getValue());
         countryValue.setValue(number.getCountry());
         stage.show();

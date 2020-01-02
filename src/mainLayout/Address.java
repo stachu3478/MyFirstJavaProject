@@ -9,11 +9,11 @@ package mainLayout;
  *
  * @author stachu
  */
-class Address {
+public class Address {
     private City city;
     private String street;
-    private Integer nr;
-    private Integer inNr;
+    private int nr;
+    private int inNr;
     
     public Address() {
         this.city = new City();
@@ -22,12 +22,39 @@ class Address {
         this.inNr = 27;
     }
     
+    public City getCity() {
+        return this.city;
+    }
+    
+    public String getStreet() {
+        return this.street;
+    }
+    
+    public String getNr() {
+        return Integer.toString(this.nr);
+    }
+    
+    public String getNr2() {
+        return Integer.toString(this.inNr);
+    }
+    
     public String getString() {
         return
                 city.getName() + "\n"
                 + street + ", "
-                + nr.toString() + "/"
-                + inNr.toString() + "\n"
+                + getNr() + "/"
+                + getNr2() + "\n"
+                + city.getPostalCode() + " "
+                + city.getPostCityName();
+    }
+    
+    @Override
+    public String toString() {
+        return
+                city.getName() + " "
+                + street + ", "
+                + getNr() + "/"
+                + getNr2() + " "
                 + city.getPostalCode() + " "
                 + city.getPostCityName();
     }

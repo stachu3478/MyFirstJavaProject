@@ -11,7 +11,7 @@ import java.util.ArrayList;
  *
  * @author stachu
  */
-class Person {
+public class Person {
     private String firstName;
     private String lastName;
     private Address address;
@@ -41,5 +41,14 @@ class Person {
     
     public String getAddressString() {
         return this.address.getString();
+    }
+    
+    public String getFullName() {
+        return this.firstName + " " + this.lastName;
+    }
+    
+    @Override
+    public String toString() {
+        return this.firstName + " " + this.lastName + "\n" + this.address.toString();
     }
 }

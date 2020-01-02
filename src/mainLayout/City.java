@@ -9,7 +9,7 @@ package mainLayout;
  *
  * @author stachu
  */
-class City {
+public class City {
     private PostOffice postOffice;
     private String name;
     

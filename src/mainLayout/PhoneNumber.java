@@ -18,12 +18,23 @@ class PhoneNumber {
         this.country = new Country();
     }
     
+    public String setNumber(String num) throws NumberFormatException {
+        if (num.length() != 9) throw new NumberFormatException();
+        this.number = Integer.parseInt(num);
+        return num;
+    }
+    
+    public Country setCountry(Country ctry) {
+        return this.country = ctry;
+    }
+    
     public String getValue() {
         return this.number.toString();
     }
     
-    public String getFullNumber() {
-        return this.country.getDirectional() + getValue();
+    @Override
+    public String toString() {
+        return this.country.getDirectional() + " " + getValue();
     }
     
     public Country getCountry() {

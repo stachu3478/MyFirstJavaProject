@@ -5,16 +5,15 @@
         <group>
             <file>file:/C:/Users/stach/Desktop/repo/MyFirstJavaProject/src/mainLayout/FXPersonView.java</file>
             <file>file:/C:/Users/stach/Desktop/repo/MyFirstJavaProject/src/mainLayout/Country.java</file>
+            <file>file:/C:/Users/stach/Desktop/repo/MyFirstJavaProject/src/mainLayout/FXEditAddressView.java</file>
             <file>file:/C:/Users/stach/Desktop/repo/MyFirstJavaProject/src/mainLayout/Address.java</file>
             <file>file:/C:/Users/stach/Desktop/repo/MyFirstJavaProject/src/mainLayout/PostOffice.java</file>
-            <file>file:/C:/Users/stach/Desktop/repo/MyFirstJavaProject/src/mainLayout/components/SelectorReceiver.java</file>
+            <file>file:/C:/Users/stach/Desktop/repo/MyFirstJavaProject/src/mainLayout/FXEditPersonView.java</file>
             <file>file:/C:/Users/stach/Desktop/repo/MyFirstJavaProject/src/mainLayout/Person.java</file>
             <file>file:/C:/Users/stach/Desktop/repo/MyFirstJavaProject/src/mainLayout/PhoneNumber.java</file>
-            <file>file:/C:/Users/stach/Desktop/repo/MyFirstJavaProject/src/mainLayout/components/FXListSelector.java</file>
             <file>file:/C:/Users/stach/Desktop/repo/MyFirstJavaProject/src/mainLayout/City.java</file>
             <file>file:/C:/Users/stach/Desktop/repo/MyFirstJavaProject/src/mainLayout/FXContactView.java</file>
             <file>file:/C:/Users/stach/Desktop/repo/MyFirstJavaProject/src/mainLayout/FXPhoneView.java</file>
-            <file>file:/C:/Users/stach/Desktop/repo/MyFirstJavaProject/src/ksiazka/adresowa/FileRecordReader.java</file>
         </group>
     </open-files>
 </project-private>
