@@ -11,7 +11,12 @@ package mainLayout;
  */
 public class PostOffice {
     private City city;
-    private Integer postalCode;
+    private int postalCode;
+    
+    private String feed0(int n) {
+        if (n < 1) return "";
+        else return "0" + feed0(n - 1);
+    }
     
     public PostOffice() {
         this.city = new City(this);
@@ -19,11 +24,41 @@ public class PostOffice {
     }
     
     public String getCode() {
-        String zip = this.postalCode.toString();
+        String zip = Integer.toString(postalCode);
+        zip = feed0(5 - zip.length()) + zip;
         return zip.substring(0, 2) + "-" + zip.substring(2);
+    }
+    
+    public String setCode(String p1, String p2) throws NumberFormatException {
+        if (p1.length() != 2 || p2.length() != 3)
+            throw new NumberFormatException();
+        String strCode = p1 + p2;
+        this.postalCode = Integer.parseInt(strCode);
+        return strCode;
+    }
+    
+    public String getCode1() {
+        return getCode().substring(0, 2);
+    }
+    
+    public String getCode2() {
+        return getCode().substring(3);
     }
     
     public String getCityName() {
         return this.city.getName();
+    }
+    
+    public City getCity() {
+        return this.city;
+    }
+    
+    public City setCity(City ct) {
+        return this.city = ct;
+    }
+    
+    @Override
+    public String toString() {
+        return getCode() + " " + this.city.toString();
     }
 }

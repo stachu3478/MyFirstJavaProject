@@ -26,16 +26,34 @@ public class Address {
         return this.city;
     }
     
+    public City setCity(City ct) {
+        return this.city = ct;
+    }
+    
     public String getStreet() {
         return this.street;
+    }
+    
+    public String setStreet(String str) {
+        return this.street = str;
     }
     
     public String getNr() {
         return Integer.toString(this.nr);
     }
     
+    public String setNr(String nr) throws NumberFormatException {
+        this.nr = Integer.parseInt(nr);
+        return nr;
+    }
+    
     public String getNr2() {
         return Integer.toString(this.inNr);
+    }
+    
+    public String setNr2(String nr) throws NumberFormatException {
+        this.inNr = Integer.parseInt(nr);
+        return nr;
     }
     
     public String getString() {

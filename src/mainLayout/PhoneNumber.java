@@ -11,7 +11,7 @@ package mainLayout;
  */
 class PhoneNumber {
     private Country country;
-    private Integer number;
+    private int number;
     
     public PhoneNumber() {
         this.number = 123456789;
@@ -29,7 +29,7 @@ class PhoneNumber {
     }
     
     public String getValue() {
-        return this.number.toString();
+        return Integer.toString(this.number);
     }
     
     @Override

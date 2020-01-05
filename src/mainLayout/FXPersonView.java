@@ -32,6 +32,7 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
     
     private FXPhoneView numberView;
     private FXEditPersonView editView;
+    private FXEditAddressView editAddressView;
     
     private Label firstNameLabel;
     private Label lastNameLabel;
@@ -74,6 +75,10 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
         editView.setOnUpdate(updateHandler);
         editView.start(new Stage());
         
+        editAddressView = new FXEditAddressView();
+        editAddressView.setOnUpdate(updateHandler);
+        editAddressView.start(new Stage());
+        
         firstNameLabel = new Label("First name: ");
         lastNameLabel = new Label("Last name: ");
         addressLabel = new Label("Address: ");
@@ -105,6 +110,7 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("Editing address...");
+                editAddressView.receive(shownPerson.getAddress());
             }
         });
         
@@ -142,9 +148,8 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
         
         scene = new Scene(root, 480, 360);
         
-        primaryStage.setTitle("Information");
-        primaryStage.setScene(scene);
-        
+        stage.setTitle("Information");
+        stage.setScene(scene);
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             
             @Override
@@ -152,6 +157,7 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
                 System.out.println("Stage is closing");
                 numberView.stop();
                 editView.stop();
+                editAddressView.stop();
                 stage.close();
             }
         });
@@ -174,6 +180,9 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
     @Override
     public void stop() {
         numberView.stop();
+        editView.stop();
+        editAddressView.stop();
+        stage.close();
         stage.close();
     }
 

@@ -39,6 +39,10 @@ public class Person {
         return this.lastName = val;
     }
     
+    public Address getAddress() {
+        return this.address;
+    }
+    
     public String getAddressString() {
         return this.address.getString();
     }

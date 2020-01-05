@@ -21,7 +21,9 @@ import javafx.stage.Stage;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.stage.WindowEvent;
+import javax.swing.event.ChangeListener;
 import mainLayout.components.FXListSelector;
+import mainLayout.components.ObservableListSelector;
 import mainLayout.components.StandardGridPane;
 
 /**
@@ -32,6 +34,7 @@ public class FXContactView extends Application {
     private FXPersonView personView;
     
     private FXListSelector<Person, FXPersonView> contactList;
+    private ObservableListSelector<Person> filterer;
     private Label searchText;
     private TextField searchInput;
     private Button searchButton;
@@ -51,6 +54,9 @@ public class FXContactView extends Application {
         contactList.setTooltip("Click a contact to see details");
         contactList.setReceiver(personView);
         
+        filterer = new ObservableListSelector();
+        filterer.setListView(contactList.getListView());
+        
         // TODO Add search contacts text
         searchText = new Label("Search contacts: ");
         searchText.getStyleClass().add("search-label");
@@ -59,12 +65,10 @@ public class FXContactView extends Application {
         searchInput = new TextField();
         searchInput.getStyleClass().add("search-input");
         searchInput.setTooltip(new Tooltip("Enter any text to search contacts by names"));
-        searchInput.setOnKeyTyped(new EventHandler<KeyEvent>() {
+        searchInput.textProperty().addListener((observable, oldValue, newValue) -> {
 
-            @Override
-            public void handle(KeyEvent event) {
-                System.out.println("Searching...");
-            }
+            System.out.println("Searching...");
+            filterer.applyFilter(newValue);
         });
         
         // Add contacts button

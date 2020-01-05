@@ -27,11 +27,28 @@ public class City {
         return this.name;
     }
     
+    public String setName(String nm) {
+        return this.name = nm;
+    }
+    
     public String getPostalCode() {
         return this.postOffice.getCode();
     }
     
     public String getPostCityName() {
         return this.postOffice.getCityName();
+    }
+    
+    public PostOffice getPostOffice() {
+        return this.postOffice;
+    }
+    
+    public PostOffice setPostOffice(PostOffice pst) {
+        return this.postOffice = pst;
+    }
+    
+    @Override
+    public String toString() {
+        return this.name;
     }
 }
