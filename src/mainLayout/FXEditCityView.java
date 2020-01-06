@@ -5,6 +5,8 @@
  */
 package mainLayout;
 
+import models.City;
+import models.PostOffice;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -80,7 +82,7 @@ public class FXEditCityView extends Application implements SelectorReceiver<City
             }
         });
         
-        switchPostButton = new Button("Switch");
+        switchPostButton = new Button("Change");
         switchPostButton.setOnAction(new EventHandler<ActionEvent>() {
             
             @Override

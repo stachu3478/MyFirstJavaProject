@@ -3,13 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package mainLayout;
+package models;
+
+import database.Record;
 
 /**
  *
  * @author stachu
  */
-class PhoneNumber {
+public class PhoneNumber extends Record {
     private Country country;
     private int number;
     
@@ -18,10 +20,22 @@ class PhoneNumber {
         this.country = new Country();
     }
     
+    public int getNumberInt() {
+        return this.number;
+    }
+    
     public String setNumber(String num) throws NumberFormatException {
         if (num.length() != 9) throw new NumberFormatException();
         this.number = Integer.parseInt(num);
         return num;
+    }
+    
+    public void setNumberInt(int num) {
+        this.number = num;
+    };
+    
+    public Country getCountry() {
+        return this.country;
     }
     
     public Country setCountry(Country ctry) {
@@ -35,9 +49,5 @@ class PhoneNumber {
     @Override
     public String toString() {
         return this.country.getDirectional() + " " + getValue();
-    }
-    
-    public Country getCountry() {
-        return this.country;
     }
 }

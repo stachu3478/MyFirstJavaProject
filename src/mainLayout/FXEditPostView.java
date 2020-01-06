@@ -5,6 +5,9 @@
  */
 package mainLayout;
 
+import database.CityRepository;
+import models.City;
+import models.PostOffice;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -32,6 +35,7 @@ import mainLayout.components.StandardGridPane;
 public class FXEditPostView extends Application implements SelectorReceiver<PostOffice> {
     private Stage stage;
     private PostOffice editPost;
+    private FXSearchView citySearch;
     
     private Label postLabel;
     private Label cityLabel;
@@ -64,7 +68,7 @@ public class FXEditPostView extends Application implements SelectorReceiver<Post
         postalCode2 = new TextField();
         postalCode2.setPrefColumnCount(3);
         cityChoice = new ChoiceBox();
-        ObservableList<City> cities = FXCollections.observableArrayList(new City(), new City(), new City());
+        ObservableList<City> cities = CityRepository.getRepository().getList();
         cityChoice.setItems(cities);
         cityInput = new TextField();
         chooseCityBtn = new RadioButton("Choose existing city: ");
@@ -123,7 +127,7 @@ public class FXEditPostView extends Application implements SelectorReceiver<Post
                     if (updateHandler != null) updateHandler.handle(event);
                     stage.close();
                 } catch (NumberFormatException e) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR, "Entered phone has invalid format. It should consist of 9 digits.", ButtonType.OK);
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "Invalid format of postal code. Please correct", ButtonType.OK);
                     alert.showAndWait();
                 }
             }

@@ -5,6 +5,8 @@
  */
 package mainLayout;
 
+import models.PhoneNumber;
+import models.Person;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -13,7 +15,6 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -47,7 +48,7 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
     private Button addPhoneNumberBtn;
     private Button removePhoneNumberBtn;
     
-    private GridPane root;
+    private StandardGridPane root;
     private Scene scene;
     
     @Override
@@ -182,7 +183,6 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
         numberView.stop();
         editView.stop();
         editAddressView.stop();
-        stage.close();
         stage.close();
     }
 

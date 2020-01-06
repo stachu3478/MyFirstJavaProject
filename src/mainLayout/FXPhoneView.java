@@ -5,12 +5,14 @@
  */
 package mainLayout;
 
+import database.CountryRepository;
+import models.PhoneNumber;
+import models.Country;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -21,11 +23,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import mainLayout.components.SelectorReceiver;
 import mainLayout.components.StandardGridPane;
-import mainLayout.components.UpdateEvent;
 
 /**
  *
@@ -55,7 +55,7 @@ public class FXPhoneView extends Application implements SelectorReceiver<PhoneNu
         
         numberValue = new TextField();
         countryValue = new ChoiceBox();
-        ObservableList<Country> countries = FXCollections.observableArrayList(new Country(), new Country(), new Country());
+        ObservableList<Country> countries = new CountryRepository().getList().sorted();
         countryValue.setItems(countries);
         // TODO add countries to choice box
         

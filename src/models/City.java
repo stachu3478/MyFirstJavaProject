@@ -3,13 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package mainLayout;
+package models;
+
+import database.Record;
 
 /**
  *
  * @author stachu
  */
-public class City {
+public class City extends Record {
     private PostOffice postOffice;
     private String name;
     

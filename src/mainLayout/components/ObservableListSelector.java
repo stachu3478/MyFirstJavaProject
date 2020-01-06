@@ -30,7 +30,7 @@ public class ObservableListSelector<T> {
             public boolean test(T item) {
                 System.out.println("Filtering...");
                 System.out.println(filterValue);
-                boolean passes = item.toString().contains(filterValue);
+                boolean passes = item.toString().toLowerCase().contains(filterValue);
                 if (passes) System.out.println("Passed");
                 else System.out.println("Filtered");
                 return passes;
@@ -43,6 +43,10 @@ public class ObservableListSelector<T> {
         setItems(list.getItems());
     }
     
+    public ListView<T> getListView() {
+        return this.frontList;
+    }
+    
     public void setItems(ObservableList<T> items) {
         this.preList = items;
         this.itemList = items.filtered(filter);
@@ -50,7 +54,7 @@ public class ObservableListSelector<T> {
     }
     
     public void applyFilter(String val) {
-        this.filterValue = val;
+        this.filterValue = val.toLowerCase();
         this.itemList = preList.filtered(filter);
         frontList.setItems(itemList);
     }

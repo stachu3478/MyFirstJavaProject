@@ -3,15 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package mainLayout;
+package models;
+
+import database.Record;
 
 /**
  *
  * @author stachu
  */
-public class PostOffice {
+public class PostOffice extends Record {
     private City city;
     private int postalCode;
+    private int cityId;
     
     private String feed0(int n) {
         if (n < 1) return "";
@@ -37,6 +40,14 @@ public class PostOffice {
         return strCode;
     }
     
+    public int getCodeInt() {
+        return this.postalCode;
+    }
+    
+    public int setCodeInt(int code) {
+        return this.postalCode = code;
+    }
+    
     public String getCode1() {
         return getCode().substring(0, 2);
     }
@@ -55,6 +66,14 @@ public class PostOffice {
     
     public City setCity(City ct) {
         return this.city = ct;
+    }
+    
+    public int getCityId() {
+        return this.cityId;
+    }
+    
+    public int setCityId(int ct) {
+        return this.cityId = ct;
     }
     
     @Override

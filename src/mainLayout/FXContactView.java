@@ -6,6 +6,7 @@ package mainLayout;
  * and open the template in the editor.
  */
 
+import models.Person;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,13 +16,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.scene.control.Tooltip;
-import javafx.scene.image.Image;
 import javafx.stage.WindowEvent;
-import javax.swing.event.ChangeListener;
 import mainLayout.components.FXListSelector;
 import mainLayout.components.ObservableListSelector;
 import mainLayout.components.StandardGridPane;
@@ -39,7 +36,7 @@ public class FXContactView extends Application {
     private TextField searchInput;
     private Button searchButton;
     
-    private GridPane root;
+    private StandardGridPane root;
     private Scene scene;
     
     @Override

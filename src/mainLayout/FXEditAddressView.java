@@ -5,6 +5,8 @@
  */
 package mainLayout;
 
+import models.Address;
+import models.City;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
