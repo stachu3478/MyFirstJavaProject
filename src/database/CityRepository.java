@@ -6,20 +6,17 @@
 package database;
 
 import java.io.IOException;
+import javafx.collections.ObservableList;
 import models.City;
+import models.PostOffice;
 
 /**
  *
  * @author stachu
  */
 public class CityRepository extends Repository<City> {
-    private static final String filename = "phone.db";
-    private static CityRepository rep = null;
-    
-    public static CityRepository getRepository() {
-        if (rep == null) rep = new CityRepository();
-        return rep;
-    }
+    private static final String filename = "city.db";
+    private PostRepository postDb;
     
     public CityRepository() {
         super();
@@ -29,6 +26,8 @@ public class CityRepository extends Repository<City> {
         } catch (IOException e) {
             System.out.println("No access. Dry run.");
         }
+        postDb = new PostRepository(this);
+        scannedDone();
     }
     
     @Override
@@ -36,7 +35,8 @@ public class CityRepository extends Repository<City> {
         FileRecordReader reader = getReader();
         City city = new City();
         city.setName(reader.readString());
-        city.setPostOffice(PostRepository.getRepository().getById(reader.readInteger()));
+        city.setPostId(reader.readInteger());
+        // city.setPostOffice(PostRepository.getRepository().getById(reader.readInteger()));
         return city;
     };
     
@@ -46,4 +46,16 @@ public class CityRepository extends Repository<City> {
         writer.writeString(city.getName());
         writer.writeInteger(city.getPostOffice().getId());
     };
+    
+    public void scannedDone() {
+        ObservableList<City> rList = getList();
+        for (int i = 0; i < rList.size(); i++) {
+            City city = rList.get(i);
+            city.setPostOffice(postDb.getById(city.getPostId()));
+        }
+    }
+    
+    public PostRepository getPostRepository() {
+        return this.postDb;
+    }
 }

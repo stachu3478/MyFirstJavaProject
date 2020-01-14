@@ -15,16 +15,12 @@ import models.PostOffice;
  * @author stachu
  */
 public class PostRepository extends Repository<PostOffice> {
-    private static final String filename = "phone.db";
-    private static PostRepository rep = null;
-    
-    public static PostRepository getRepository() {
-        if (rep == null) rep = new PostRepository();
-        return rep;
-    }
-    
-    public PostRepository() {
+    private static final String filename = "post.db";
+    private CityRepository cityDb;
+
+    public PostRepository(CityRepository cDb) {
         super();
+        cityDb = cDb;
         try {
             setFile(filename);
             scan();
@@ -53,10 +49,9 @@ public class PostRepository extends Repository<PostOffice> {
     public void scanned() {
         // TODO implement cit bind
         ObservableList<PostOffice> rList = getList();
-        Repository<City> cityRep = CityRepository.getRepository();
         for (int i = 0; i < rList.size(); i++) {
             PostOffice post = rList.get(i);
-            post.setCity(cityRep.getById(post.getCityId()));
+            post.setCity(cityDb.getById(post.getCityId()));
         }
     }
 }

@@ -3,28 +3,18 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/stach/Desktop/repo/MyFirstJavaProject/src/mainLayout/FXPersonView.java</file>
-            <file>file:/C:/Users/stach/Desktop/repo/MyFirstJavaProject/src/models/Address.java</file>
-            <file>file:/C:/Users/stach/Desktop/repo/MyFirstJavaProject/src/mainLayout/FXEditAddressView.java</file>
-            <file>file:/C:/Users/stach/Desktop/repo/MyFirstJavaProject/src/models/Person.java</file>
-            <file>file:/C:/Users/stach/Desktop/repo/MyFirstJavaProject/src/database/PhoneRepository.java</file>
-            <file>file:/C:/Users/stach/Desktop/repo/MyFirstJavaProject/src/database/PostRepository.java</file>
-            <file>file:/C:/Users/stach/Desktop/repo/MyFirstJavaProject/src/database/CountryRepository.java</file>
-            <file>file:/C:/Users/stach/Desktop/repo/MyFirstJavaProject/src/database/CityRepository.java</file>
-            <file>file:/C:/Users/stach/Desktop/repo/MyFirstJavaProject/src/mainLayout/FXPhoneView.java</file>
-            <file>file:/C:/Users/stach/Desktop/repo/MyFirstJavaProject/src/models/Country.java</file>
-            <file>file:/C:/Users/stach/Desktop/repo/MyFirstJavaProject/src/mainLayout/components/FXSearchView.java</file>
-            <file>file:/C:/Users/stach/Desktop/repo/MyFirstJavaProject/src/mainLayout/FXEditPersonView.java</file>
-            <file>file:/C:/Users/stach/Desktop/repo/MyFirstJavaProject/src/models/PostOffice.java</file>
-            <file>file:/C:/Users/stach/Desktop/repo/MyFirstJavaProject/src/mainLayout/FXEditPostView.java</file>
-            <file>file:/C:/Users/stach/Desktop/repo/MyFirstJavaProject/src/database/FileRecordReader.java</file>
-            <file>file:/C:/Users/stach/Desktop/repo/MyFirstJavaProject/src/database/Repository.java</file>
-            <file>file:/C:/Users/stach/Desktop/repo/MyFirstJavaProject/src/models/City.java</file>
-            <file>file:/C:/Users/stach/Desktop/repo/MyFirstJavaProject/src/models/PhoneNumber.java</file>
-            <file>file:/C:/Users/stach/Desktop/repo/MyFirstJavaProject/src/mainLayout/FXContactView.java</file>
-            <file>file:/C:/Users/stach/Desktop/repo/MyFirstJavaProject/src/mainLayout/FXEditCityView.java</file>
-            <file>file:/C:/Users/stach/Desktop/repo/MyFirstJavaProject/src/mainLayout/components/ObservableListSelector.java</file>
-            <file>file:/C:/Users/stach/Desktop/repo/MyFirstJavaProject/src/database/Record.java</file>
+            <file>file:/C:/Users/stach/OneDrive/Pulpit/repo/MyFirstJavaProject/src/mainLayout/FXEditAddressView.java</file>
+            <file>file:/C:/Users/stach/OneDrive/Pulpit/repo/MyFirstJavaProject/src/mainLayout/components/FXSearchView.java</file>
+            <file>file:/C:/Users/stach/OneDrive/Pulpit/repo/MyFirstJavaProject/src/mainLayout/FXPersonView.java</file>
+            <file>file:/C:/Users/stach/OneDrive/Pulpit/repo/MyFirstJavaProject/src/database/Repository.java</file>
+            <file>file:/C:/Users/stach/OneDrive/Pulpit/repo/MyFirstJavaProject/src/models/City.java</file>
+            <file>file:/C:/Users/stach/OneDrive/Pulpit/repo/MyFirstJavaProject/src/mainLayout/FXEditPostView.java</file>
+            <file>file:/C:/Users/stach/OneDrive/Pulpit/repo/MyFirstJavaProject/src/models/PostOffice.java</file>
+            <file>file:/C:/Users/stach/OneDrive/Pulpit/repo/MyFirstJavaProject/src/database/CityRepository.java</file>
+            <file>file:/C:/Users/stach/OneDrive/Pulpit/repo/MyFirstJavaProject/src/mainLayout/FXContactView.java</file>
+            <file>file:/C:/Users/stach/OneDrive/Pulpit/repo/MyFirstJavaProject/src/database/CountryRepository.java</file>
+            <file>file:/C:/Users/stach/OneDrive/Pulpit/repo/MyFirstJavaProject/src/mainLayout/FXEditCityView.java</file>
+            <file>file:/C:/Users/stach/OneDrive/Pulpit/repo/MyFirstJavaProject/src/database/PostRepository.java</file>
         </group>
     </open-files>
 </project-private>

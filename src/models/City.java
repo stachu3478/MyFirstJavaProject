@@ -14,6 +14,7 @@ import database.Record;
 public class City extends Record {
     private PostOffice postOffice;
     private String name;
+    private int postId;
     
     public City() {
         this.postOffice = new PostOffice();
@@ -46,11 +47,20 @@ public class City extends Record {
     }
     
     public PostOffice setPostOffice(PostOffice pst) {
+        this.postId = pst.getId();
         return this.postOffice = pst;
     }
     
     @Override
     public String toString() {
         return this.name;
+    }
+
+    public int getPostId() {
+        return this.postId; //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void setPostId(int readInteger) {
+        this.postId = readInteger; //To change body of generated methods, choose Tools | Templates.
     }
 }

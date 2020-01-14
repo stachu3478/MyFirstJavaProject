@@ -5,6 +5,7 @@
  */
 package mainLayout;
 
+import database.PostRepository;
 import models.City;
 import models.PostOffice;
 import javafx.application.Application;
@@ -19,6 +20,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import mainLayout.components.FXSearchView;
 import mainLayout.components.SelectorReceiver;
 import mainLayout.components.StandardGridPane;
 
@@ -32,11 +34,16 @@ public class FXEditCityView extends Application implements SelectorReceiver<City
     private City editCity;
     
     private FXEditPostView postView;
+    private FXSearchView<PostOffice> postSearch;
+    private PostOffice selectedPost;
+    
+    private PostRepository postDb;
     
     private Label cityLabel;
     private Label postLabel;
     private TextField cityInput;
-    private ChoiceBox<PostOffice> postChoice;
+    private Label chosenPost;
+    private Button addPostButton;
     private Button editPostButton;
     private Button switchPostButton;
     private Button saveButton;
@@ -50,27 +57,59 @@ public class FXEditCityView extends Application implements SelectorReceiver<City
     public void start(Stage primaryStage) {
         stage = primaryStage;
         
-        EventHandler<ActionEvent> uHandler = new EventHandler<ActionEvent>() {
+        postSearch = new FXSearchView<>();
+        postSearch.start(new Stage());
+        postSearch.setItemName("Post office");
+        postSearch.setOnUpdate(new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) {
+                PostOffice newPost = postSearch.getItem();
+                if (newPost != null) {
+                    chosenPost.setText(newPost.toString());
+                    selectedPost = newPost;
+                }
+            }
+        });
+        
+        postView = new FXEditPostView();
+        postView.setOnUpdate(new EventHandler<ActionEvent>() {
             
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("Updating interface...");
                 cityInput.setText(editCity.getName());
-                // TODO refresh postChoice
+                PostOffice selected = postView.getEditPost();
+                if (selected != null) {
+                    chosenPost.setText(selected.toString());
+                    if (postView.getAddingMode()) {
+                        postDb.addRecord(selected);
+                        postDb.saveList();
+                    }
+                    selectedPost = selected;
+                }
             }
-        };
-        
-        postView = new FXEditPostView();
-        postView.setOnUpdate(uHandler);
+        });
         postView.start(new Stage());
         
         cityLabel = new Label("City: ");
         postLabel = new Label("Post office: ");
+        chosenPost = new Label("No post office");
         
         cityInput = new TextField();
-        postChoice = new ChoiceBox();
-        ObservableList<PostOffice> posts = FXCollections.observableArrayList(new PostOffice(), new PostOffice(), new PostOffice());
-        postChoice.setItems(posts);
+        //postDb = new PostRepository();
+        ObservableList<PostOffice> posts = postDb.getList();
+        
+        addPostButton = new Button("New");
+        addPostButton.setOnAction(new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) {
+                System.out.println("Adding post...");
+                postView.receive(new PostOffice());
+                postView.setAddingMode(true);
+            }
+        });
         
         editPostButton = new Button("Edit");
         editPostButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -78,16 +117,18 @@ public class FXEditCityView extends Application implements SelectorReceiver<City
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("Editing post...");
-                postView.receive(editCity.getPostOffice());
+                postView.receive(selectedPost);
+                postView.setAddingMode(false);
             }
         });
         
-        switchPostButton = new Button("Change");
+        switchPostButton = new Button("Choose");
         switchPostButton.setOnAction(new EventHandler<ActionEvent>() {
             
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("Switching post...");
+                postSearch.show(posts);
             }
         });
         
@@ -98,7 +139,7 @@ public class FXEditCityView extends Application implements SelectorReceiver<City
             public void handle(ActionEvent event) {
                 System.out.println("Saving changes...");
                 editCity.setName(cityInput.getText());
-                editCity.setPostOffice(postChoice.getValue());
+                editCity.setPostOffice(selectedPost);
                 if (updateHandler != null) updateHandler.handle(event);
                 stage.close();
             }
@@ -117,15 +158,16 @@ public class FXEditCityView extends Application implements SelectorReceiver<City
         
         root = new StandardGridPane();
         root.add(cityLabel, 0, 0);
-        root.add(cityInput, 1, 0, 3, 1);
+        root.add(cityInput, 1, 0, 4, 1);
         root.add(postLabel, 0, 1);
-        root.add(postChoice, 1, 1);
-        root.add(editPostButton, 2, 1);
-        root.add(switchPostButton, 3, 1);
+        root.add(chosenPost, 1, 1);
+        root.add(addPostButton, 2, 1);
+        root.add(editPostButton, 3, 1);
+        root.add(switchPostButton, 4, 1);
         root.add(saveButton, 1, 2);
         root.add(discardButton, 2, 2);
         
-        Scene scene = new Scene(root, 300, 250);
+        Scene scene = new Scene(root, 480, 360);
         
         primaryStage.setTitle("Edit");
         primaryStage.setScene(scene);
@@ -139,7 +181,8 @@ public class FXEditCityView extends Application implements SelectorReceiver<City
     public void receive(City city) {
         this.editCity = city;
         cityInput.setText(city.getName());
-        postChoice.setValue(city.getPostOffice());
+        selectedPost = city.getPostOffice();
+        chosenPost.setText(selectedPost.toString());
         stage.setTitle("Edit - " + city.getName());
         stage.show();
     }
@@ -148,6 +191,10 @@ public class FXEditCityView extends Application implements SelectorReceiver<City
     public void stop() {
         postView.stop();
         stage.close();
+    }
+    
+    public void eetPostDb(PostRepository val) {
+        this.postDb = val;
     }
 
     /**

@@ -17,7 +17,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import mainLayout.FXContactView;
 
 /**
  *
@@ -90,7 +89,7 @@ public class FXSearchView<T> extends Application {
         root.add(discardButton, 1, 2);
         
         scene = new Scene(root, 480, 360);
-        scene.getStylesheets().add(FXContactView.class.getResource("FXContactView.css").toExternalForm());
+        //scene.getStylesheets().add(FXContactView.class.getResource("FXContactView.css").toExternalForm());
         
         stage.setTitle("Select");
         stage.setScene(scene);
@@ -109,6 +108,10 @@ public class FXSearchView<T> extends Application {
         return filterer.getListView().getSelectionModel().getSelectedItem();
     }
     
+    public void setItem(T item) {
+        filterer.getListView().getSelectionModel().select(item);
+    }
+    
     public void show() {
         stage.show();
         chooseButton.setDisable(true);
@@ -118,6 +121,10 @@ public class FXSearchView<T> extends Application {
     public void show(ObservableList<T> list) {
         filterer.setItems(list);
         show();
+    }
+    
+    public void stop() {
+        stage.close();
     }
 
     /**
