@@ -61,7 +61,6 @@ public class AddressRepository extends Repository<Address> {
     };
     
     public void scannedDone() {
-        // TODO implement cit bind
         ObservableList<Address> rList = getList();
         for (int i = 0; i < rList.size(); i++) {
             Address addr = rList.get(i);

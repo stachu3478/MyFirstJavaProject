@@ -21,6 +21,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import mainLayout.components.FXSearchView;
@@ -42,7 +43,7 @@ public class FXEditAddressView extends Application implements SelectorReceiver<A
     private City selectedCity;
     
     private Label cityLabel;
-    private Label cityName;
+    private Text cityName;
     private Label streetLabel;
     private Label nrLabel;
     private Label slashLabel;
@@ -119,7 +120,8 @@ public class FXEditAddressView extends Application implements SelectorReceiver<A
         streetLabel = new Label("Street name: ");
         nrLabel = new Label("At: ");
         slashLabel = new Label(" / ");
-        cityName = new Label("No city");
+        cityName = new Text("No city");
+        // TODO change to Text in edit city view
         
         streetInput = new TextField();
         nrInput = new TextField();
@@ -196,7 +198,7 @@ public class FXEditAddressView extends Application implements SelectorReceiver<A
         root.add(chooseCityButton, 3, 0);
         root.add(editCityButton, 4, 0);
         root.add(streetLabel, 0, 1);
-        root.add(streetInput, 1, 1, 3, 1);
+        root.add(streetInput, 1, 1, 4, 1);
         root.add(nrLabel, 0, 2);
         root.add(nrInput, 1, 2);
         root.add(slashLabel, 2, 2);
@@ -215,6 +217,7 @@ public class FXEditAddressView extends Application implements SelectorReceiver<A
                 System.out.println("Stage is closing");
                 cityView.stop();
                 stage.close();
+                citySearch.stop();
             }
         });
     }
@@ -238,6 +241,7 @@ public class FXEditAddressView extends Application implements SelectorReceiver<A
     public void stop() {
         cityView.stop();
         stage.close();
+        citySearch.stop();
     }
     
     public void setCityDb(CityRepository cDb) {

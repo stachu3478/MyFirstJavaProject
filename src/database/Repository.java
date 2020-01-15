@@ -114,6 +114,7 @@ public abstract class Repository<T extends Record> {
     };
     
     public T getById(int id) {
+        if (id > lastId) return null;
         prepareIndex();
         return list.get(indexes[id]);
     };

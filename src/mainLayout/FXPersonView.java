@@ -5,6 +5,7 @@
  */
 package mainLayout;
 
+import database.PhoneRepository;
 import models.PhoneNumber;
 import models.Person;
 import javafx.application.Application;
@@ -35,6 +36,8 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
     private FXEditPersonView editView;
     private FXEditAddressView editAddressView;
     
+    private PhoneRepository phoneDb;
+    
     private Label firstNameLabel;
     private Label lastNameLabel;
     private Label addressLabel;
@@ -48,6 +51,9 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
     private Button addPhoneNumberBtn;
     private Button removePhoneNumberBtn;
     
+    private boolean addingMode;
+    
+    private ObservableList<PhoneNumber> numbers;
     private StandardGridPane root;
     private Scene scene;
     
@@ -59,11 +65,18 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("Updating interface...");
-                contacts.refresh();
                 firstNameValue.setText(shownPerson.getFirstName());
                 lastNameValue.setText(shownPerson.getLastName());
                 stage.setTitle(shownPerson.getFullName() + " - Information");
                 addressText.setText(shownPerson.getAddressString());
+                if (numberView.getAddingMode()) {
+                    PhoneNumber newPhone = numberView.getPhoneNumber();
+                    phoneDb.addRecord(newPhone);
+                    phoneDb.saveList();
+                    shownPerson.getPhoneList().add(newPhone);
+                    numberView.setAddingMode(false);
+                }
+                contacts.refresh();
             }
         };
         
@@ -90,7 +103,6 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
         addressText = new Text();
         
         contacts = new FXListSelector<>();
-        ObservableList<PhoneNumber> numbers = FXCollections.observableArrayList(new PhoneNumber(), new PhoneNumber(), new PhoneNumber());
         contacts.setItems(numbers);
         contacts.setTooltip("Click a number to edit it");
         contacts.setReceiver(numberView);
@@ -121,6 +133,9 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("Adding new phone...");
+                numberView.receive(new PhoneNumber(shownPerson));
+                numberView.setAddingMode(true);
+                // TODO make false on list selector
             }
         });
         
@@ -136,16 +151,16 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
         root = new StandardGridPane();
         root.add(firstNameLabel, 0, 0);
         root.add(firstNameValue, 1, 0);
-        root.add(lastNameLabel, 0, 1);
-        root.add(lastNameValue, 1, 1);
-        root.add(addressLabel, 0, 2);
-        root.add(addressText, 1, 2);
-        root.add(contactsLabel, 0, 3, 2, 1);
-        root.add(contacts.getListView(), 0, 4, 2, 1);
-        root.add(addPhoneNumberBtn, 0, 5);
-        root.add(removePhoneNumberBtn, 1, 5);
-        root.add(editPersonButton, 0, 6, 2, 1);
-        root.add(editAddressButton, 0, 7, 2, 1);
+        root.add(lastNameLabel, 2, 0);
+        root.add(lastNameValue, 3, 0);
+        root.add(addressLabel, 0, 1);
+        root.add(addressText, 1, 1);
+        root.add(contactsLabel, 0, 2, 2, 1);
+        root.add(contacts.getListView(), 0, 3, 2, 1);
+        root.add(addPhoneNumberBtn, 0, 4);
+        root.add(removePhoneNumberBtn, 1, 4);
+        root.add(editPersonButton, 0, 5, 2, 1);
+        root.add(editAddressButton, 2, 4, 2, 1);
         
         scene = new Scene(root, 480, 360);
         
@@ -167,6 +182,7 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
     @Override
     public void receive(Person person) {
         this.shownPerson = person;
+        numbers = FXCollections.observableArrayList(person.getPhoneList());
         firstNameValue.setText(person.getFirstName());
         lastNameValue.setText(person.getLastName());
         stage.setTitle(person.getFullName() + " - Information");
@@ -184,6 +200,22 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
         editView.stop();
         editAddressView.stop();
         stage.close();
+    }
+    
+    public void setAddingMode(boolean val) {
+        addingMode = val;
+        if (val)
+            stage.setTitle("New person");
+        else if (shownPerson != null)
+            stage.setTitle(shownPerson.getFullName() + " - Information");
+    }
+    
+    public boolean getAddingMode() {
+        return addingMode;
+    }
+    
+    public void setPhoneRepository(PhoneRepository repo) {
+        phoneDb = repo;
     }
 
     /**

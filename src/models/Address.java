@@ -5,11 +5,13 @@
  */
 package models;
 
+import database.Record;
+
 /**
  *
  * @author stachu
  */
-public class Address {
+public class Address extends Record {
     private City city;
     private String street;
     private int nr;

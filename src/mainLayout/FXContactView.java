@@ -6,6 +6,7 @@ package mainLayout;
  * and open the template in the editor.
  */
 
+import database.PeopleRepository;
 import models.Person;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -30,6 +31,8 @@ import mainLayout.components.StandardGridPane;
 public class FXContactView extends Application {
     private FXPersonView personView;
     
+    private PeopleRepository peopleDb;
+    
     private FXListSelector<Person, FXPersonView> contactList;
     private ObservableListSelector<Person> filterer;
     private Label searchText;
@@ -46,10 +49,11 @@ public class FXContactView extends Application {
         personView.start(new Stage());
         
         contactList = new FXListSelector<Person, FXPersonView>();
-        ObservableList<Person> people = FXCollections.observableArrayList(new Person(), new Person(), new Person());
-        contactList.setItems(people);
+        peopleDb = new PeopleRepository();
+        contactList.setItems(peopleDb.getList());
         contactList.setTooltip("Click a contact to see details");
         contactList.setReceiver(personView);
+        personView.setPhoneRepository(peopleDb.getPhoneDb());
         
         filterer = new ObservableListSelector();
         filterer.setListView(contactList.getListView());
@@ -76,6 +80,9 @@ public class FXContactView extends Application {
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("Opening new window to add a new contact");
+                personView.receive(new Person());
+                personView.setAddingMode(true);
+                // TODO disable adding mode for person
             }
         });
         

@@ -14,10 +14,17 @@ import database.Record;
 public class PhoneNumber extends Record {
     private Country country;
     private int number;
+    private int personId;
     
     public PhoneNumber() {
         this.number = 123456789;
         this.country = new Country();
+    }
+    
+    public PhoneNumber(Person person) {
+        this.number = 987654321;
+        this.country = new Country();
+        this.personId = person.getId();
     }
     
     public int getNumberInt() {
@@ -44,6 +51,14 @@ public class PhoneNumber extends Record {
     
     public String getValue() {
         return Integer.toString(this.number);
+    }
+    
+    public int getPersonId() {
+        return this.personId;
+    }
+    
+    public void setPersonId(int val) {
+        this.personId = val;
     }
     
     @Override

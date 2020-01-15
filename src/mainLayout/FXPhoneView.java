@@ -42,6 +42,8 @@ public class FXPhoneView extends Application implements SelectorReceiver<PhoneNu
     private Button saveButton;
     private Button cancelButton;
     
+    private boolean addingMode = true;
+    
     private EventHandler<ActionEvent> updateHandler;
     
     private GridPane root;
@@ -115,6 +117,22 @@ public class FXPhoneView extends Application implements SelectorReceiver<PhoneNu
     @Override
     public void stop() {
         stage.close();
+    }
+    
+    public void setAddingMode(boolean val) {
+        addingMode = val;
+        if (val)
+            stage.setTitle("New phone number");
+        else
+            stage.setTitle("Edit phone number");
+    }
+    
+    public boolean getAddingMode() {
+        return addingMode;
+    }
+    
+    public PhoneNumber getPhoneNumber() {
+        return editNumber;
     }
 
     /**
