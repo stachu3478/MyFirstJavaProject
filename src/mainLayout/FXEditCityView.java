@@ -49,6 +49,8 @@ public class FXEditCityView extends Application implements SelectorReceiver<City
     private Button saveButton;
     private Button discardButton;
     
+    private boolean addingMode;
+    
     private EventHandler<ActionEvent> updateHandler;
     
     private StandardGridPane root;
@@ -56,6 +58,7 @@ public class FXEditCityView extends Application implements SelectorReceiver<City
     @Override
     public void start(Stage primaryStage) {
         stage = primaryStage;
+        postDb = new PostRepository();
         
         postSearch = new FXSearchView<>();
         postSearch.start(new Stage());
@@ -73,6 +76,7 @@ public class FXEditCityView extends Application implements SelectorReceiver<City
         });
         
         postView = new FXEditPostView();
+        postView.setCityDb(postDb.getCityDb());
         postView.setOnUpdate(new EventHandler<ActionEvent>() {
             
             @Override
@@ -97,7 +101,6 @@ public class FXEditCityView extends Application implements SelectorReceiver<City
         chosenPost = new Label("No post office");
         
         cityInput = new TextField();
-        //postDb = new PostRepository();
         ObservableList<PostOffice> posts = postDb.getList();
         
         addPostButton = new Button("New");
@@ -196,12 +199,26 @@ public class FXEditCityView extends Application implements SelectorReceiver<City
     public void eetPostDb(PostRepository val) {
         this.postDb = val;
     }
+    
+    public void setAddingMode(boolean mode) {
+        addingMode = mode;
+        if (mode)
+            stage.setTitle("New City");
+    }
+    
+    public boolean getAddingMode() {
+        return addingMode;
+    }
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public City getCity() {
+        return editCity; //To change body of generated methods, choose Tools | Templates.
     }
     
 }

@@ -30,6 +30,7 @@ public abstract class Repository<T extends Record> {
     public Repository() {
         records = 0;
         lastId = -1;
+        indexToReload = true;
     };
     
     public void setFile(String file) throws IOException {
@@ -104,7 +105,7 @@ public abstract class Repository<T extends Record> {
     
     public void prepareIndex() {
         if (indexToReload) {
-            indexes = new int[lastId];
+            indexes = new int[lastId + 1];
             int n = list.size();
             for (int i = 0; i < n; i++)
                 indexes[list.get(i).getId()] = i;
@@ -136,7 +137,9 @@ public abstract class Repository<T extends Record> {
         writeItem(rec);
     };
     
-    public void scanned() {};
+    public void scanned() {
+        System.out.println("Scanned done");
+    };
     
     public abstract T readItem() throws IOException;
     public abstract void writeItem(T rec) throws IOException;

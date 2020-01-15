@@ -5,6 +5,7 @@
  */
 package mainLayout;
 
+import database.CityRepository;
 import models.Address;
 import models.City;
 import javafx.application.Application;
@@ -22,6 +23,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import mainLayout.components.FXSearchView;
 import mainLayout.components.SelectorReceiver;
 import mainLayout.components.StandardGridPane;
 
@@ -35,16 +37,21 @@ public class FXEditAddressView extends Application implements SelectorReceiver<A
     private Address editAddress;
     
     private FXEditCityView cityView;
+    private FXSearchView<City> citySearch;
+    private CityRepository cityDb;
+    private City selectedCity;
     
     private Label cityLabel;
+    private Label cityName;
     private Label streetLabel;
     private Label nrLabel;
     private Label slashLabel;
-    private ChoiceBox<City> cityChoice;
     private TextField streetInput;
     private TextField nrInput;
     private TextField inNrInput;
+    private Button addCityButton;
     private Button editCityButton;
+    private Button chooseCityButton;
     private Button saveAddressButton;
     private Button discardButton;
     
@@ -70,21 +77,66 @@ public class FXEditAddressView extends Application implements SelectorReceiver<A
             }
         };
         
+        cityDb = new CityRepository();
+        
         cityView = new FXEditCityView();
+        cityView.eetPostDb(cityDb.getPostRepository());
         cityView.setOnUpdate(uHandler);
+        cityView.setOnUpdate(new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) {
+                System.out.println("Updating interface...");
+                City selected = cityView.getCity();
+                if (selected != null) {
+                    cityName.setText(selected.toString());
+                    if (cityView.getAddingMode()) {
+                        cityDb.addRecord(selected);
+                        cityDb.saveList();
+                    }
+                    selectedCity = selected;
+                }
+            }
+        });
         cityView.start(new Stage());
+        
+        citySearch = new FXSearchView<>();
+        citySearch.start(new Stage());
+        citySearch.setItemName("Post office");
+        citySearch.setOnUpdate(new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) {
+                City newCity = citySearch.getItem();
+                if (newCity != null) {
+                    cityName.setText(newCity.toString());
+                    selectedCity = newCity;
+                }
+            }
+        });
         
         cityLabel = new Label("City: ");
         streetLabel = new Label("Street name: ");
         nrLabel = new Label("At: ");
         slashLabel = new Label(" / ");
+        cityName = new Label("No city");
         
-        cityChoice = new ChoiceBox();
-        ObservableList<City> cities = FXCollections.observableArrayList(new City(), new City(), new City());
-        cityChoice.setItems(cities);
         streetInput = new TextField();
         nrInput = new TextField();
+        nrInput.setPrefColumnCount(4);
         inNrInput = new TextField();
+        inNrInput.setPrefColumnCount(4);
+        
+        addCityButton = new Button("New");
+        addCityButton.setOnAction(new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) {
+                System.out.println("Adding city...");
+                cityView.receive(new City());
+                cityView.setAddingMode(true);
+            }
+        });
         
         editCityButton = new Button("Edit");
         editCityButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -93,6 +145,17 @@ public class FXEditAddressView extends Application implements SelectorReceiver<A
             public void handle(ActionEvent event) {
                 System.out.println("Editing city...");
                 cityView.receive(editAddress.getCity());
+                cityView.setAddingMode(false);
+            }
+        });
+        
+        chooseCityButton = new Button("Choose");
+        chooseCityButton.setOnAction(new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) {
+                System.out.println("Choosing city...");
+                citySearch.show(cityDb.getList());
             }
         });
         
@@ -103,7 +166,7 @@ public class FXEditAddressView extends Application implements SelectorReceiver<A
             public void handle(ActionEvent event) {
                 try {
                     System.out.println("Saving changes...");
-                    editAddress.setCity(cityChoice.getValue());
+                    editAddress.setCity(selectedCity);
                     editAddress.setStreet(streetInput.getText());
                     editAddress.setNr(nrInput.getText());
                     editAddress.setNr2(inNrInput.getText());
@@ -128,8 +191,10 @@ public class FXEditAddressView extends Application implements SelectorReceiver<A
         
         root = new StandardGridPane();
         root.add(cityLabel, 0, 0);
-        root.add(cityChoice, 1, 0);
-        root.add(editCityButton, 2, 0, 2, 1);
+        root.add(cityName, 1, 0);
+        root.add(addCityButton, 2, 0);
+        root.add(chooseCityButton, 3, 0);
+        root.add(editCityButton, 4, 0);
         root.add(streetLabel, 0, 1);
         root.add(streetInput, 1, 1, 3, 1);
         root.add(nrLabel, 0, 2);
@@ -139,7 +204,7 @@ public class FXEditAddressView extends Application implements SelectorReceiver<A
         root.add(saveAddressButton, 0, 3, 2, 1);
         root.add(discardButton, 2, 3, 2, 1);
         
-        Scene scene = new Scene(root, 480, 250);
+        Scene scene = new Scene(root, 480, 360);
         
         stage.setTitle("Edit address");
         stage.setScene(scene);
@@ -161,10 +226,11 @@ public class FXEditAddressView extends Application implements SelectorReceiver<A
     @Override
     public void receive(Address address) {
         this.editAddress = address;
-        cityChoice.setValue(address.getCity());
+        selectedCity = address.getCity();
         streetInput.setText(address.getStreet());
         nrInput.setText(address.getNr());
         inNrInput.setText(address.getNr2());
+        cityName.setText(selectedCity.getName());
         stage.show();
     }
     
@@ -172,6 +238,10 @@ public class FXEditAddressView extends Application implements SelectorReceiver<A
     public void stop() {
         cityView.stop();
         stage.close();
+    }
+    
+    public void setCityDb(CityRepository cDb) {
+        cityDb = cDb;
     }
 
     /**

@@ -85,8 +85,8 @@ public class FXEditPostView extends Application implements SelectorReceiver<Post
         postalCode1.setPrefColumnCount(2);
         postalCode2 = new TextField();
         postalCode2.setPrefColumnCount(3);
-        cityDb = new CityRepository();
-        ObservableList<City> cities = cityDb.getList();
+        // cityDb = new CityRepository();
+        // ObservableList<City> cities = cityDb.getList();
         cityInput = new TextField();
         chooseCityBtn = new RadioButton("Choose existing city: ");
         chooseCityBtn.setOnMousePressed(new EventHandler<MouseEvent>() {
@@ -121,7 +121,7 @@ public class FXEditPostView extends Application implements SelectorReceiver<Post
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("Choosing city...");
-                citySearch.show(cities);
+                citySearch.show(cityDb.getList());
             }
         });
         
@@ -211,6 +211,10 @@ public class FXEditPostView extends Application implements SelectorReceiver<Post
     
     public boolean getAddingMode() {
         return addingMode;
+    }
+    
+    public void setCityDb(CityRepository repo) {
+        this.cityDb = repo;
     }
     
     @Override

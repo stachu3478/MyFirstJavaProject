@@ -18,15 +18,26 @@ public class CityRepository extends Repository<City> {
     private static final String filename = "city.db";
     private PostRepository postDb;
     
-    public CityRepository() {
-        super();
+    private void standardInit() {
         try {
             setFile(filename);
             scan();
         } catch (IOException e) {
             System.out.println("No access. Dry run.");
         }
+    }
+    
+    public CityRepository() {
+        super();
+        standardInit();
         postDb = new PostRepository(this);
+        scannedDone();
+    }
+
+    public CityRepository(PostRepository aThis) {
+        super();
+        standardInit();
+        postDb = aThis;
         scannedDone();
     }
     

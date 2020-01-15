@@ -7,15 +7,14 @@ package database;
 
 import java.io.IOException;
 import javafx.collections.ObservableList;
-import models.City;
-import models.PostOffice;
+import models.Address;
 
 /**
  *
  * @author stachu
  */
-public class PostRepository extends Repository<PostOffice> {
-    private static final String filename = "post.db";
+public class AddressRepository extends Repository<Address> {
+    private static final String filename = "address.db";
     private CityRepository cityDb;
     
     private void standardInit() {
@@ -27,14 +26,14 @@ public class PostRepository extends Repository<PostOffice> {
         }
     }
     
-    public PostRepository() {
+    public AddressRepository() {
         super();
         standardInit();
-        cityDb = new CityRepository(this);
+        cityDb = new CityRepository();
         scannedDone();
     }
 
-    public PostRepository(CityRepository cDb) {
+    public AddressRepository(CityRepository cDb) {
         super();
         standardInit();
         cityDb = cDb;
@@ -42,27 +41,31 @@ public class PostRepository extends Repository<PostOffice> {
     }
     
     @Override
-    public PostOffice readItem() throws IOException {
+    public Address readItem() throws IOException {
         FileRecordReader reader = getReader();
-        PostOffice post = new PostOffice();
-        post.setCityId(reader.readInteger());
-        post.setCodeInt(reader.readInteger());
-        return post;
+        Address addr = new Address();
+        addr.setNr(reader.readInteger());
+        addr.setNr2(reader.readInteger());
+        addr.setStreet(reader.readString());
+        addr.setCityId(reader.readInteger());
+        return addr;
     };
     
     @Override
-    public void writeItem(PostOffice post) throws IOException {
+    public void writeItem(Address addr) throws IOException {
         FileRecordReader writer = getReader();
-        writer.writeInteger(post.getCity().getId());
-        writer.writeInteger(post.getCodeInt());
+        writer.writeInteger(addr.getNrInt());
+        writer.writeInteger(addr.getNrInt2());
+        writer.writeString(addr.getStreet());
+        writer.writeInteger(addr.getCityId());
     };
     
     public void scannedDone() {
         // TODO implement cit bind
-        ObservableList<PostOffice> rList = getList();
+        ObservableList<Address> rList = getList();
         for (int i = 0; i < rList.size(); i++) {
-            PostOffice post = rList.get(i);
-            post.setCity(cityDb.getById(post.getCityId()));
+            Address addr = rList.get(i);
+            addr.setCity(cityDb.getById(addr.getCityId()));
         }
     }
 
