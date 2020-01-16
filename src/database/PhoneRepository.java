@@ -32,6 +32,11 @@ public class PhoneRepository extends Repository<PhoneNumber> {
     }
     
     @Override
+    public PhoneNumber make() {
+        return new PhoneNumber();
+    }
+    
+    @Override
     public PhoneNumber readItem() throws IOException {
         FileRecordReader reader = getReader();
         PhoneNumber phone = new PhoneNumber();

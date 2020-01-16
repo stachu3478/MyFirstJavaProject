@@ -109,7 +109,7 @@ public class FXEditCityView extends Application implements SelectorReceiver<City
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("Adding post...");
-                postView.receive(new PostOffice());
+                postView.receive(postDb.make());
                 postView.setAddingMode(true);
             }
         });

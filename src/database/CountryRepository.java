@@ -92,6 +92,11 @@ public class CountryRepository extends Repository<Country> {
     }
     
     @Override
+    public Country make() {
+        return new Country();
+    }
+    
+    @Override
     public Country readItem() throws IOException {
         FileRecordReader reader = getReader();
         Country country = new Country();

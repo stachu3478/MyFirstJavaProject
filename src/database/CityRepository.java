@@ -42,6 +42,11 @@ public class CityRepository extends Repository<City> {
     }
     
     @Override
+    public City make() {
+        return new City(postDb.any());
+    }
+    
+    @Override
     public City readItem() throws IOException {
         FileRecordReader reader = getReader();
         City city = new City();

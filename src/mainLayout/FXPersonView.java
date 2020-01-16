@@ -5,6 +5,7 @@
  */
 package mainLayout;
 
+import database.AddressRepository;
 import database.PhoneRepository;
 import models.PhoneNumber;
 import models.Person;
@@ -20,8 +21,10 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import mainLayout.components.FXListSelector;
+import mainLayout.components.FXSearchView;
 import mainLayout.components.SelectorReceiver;
 import mainLayout.components.StandardGridPane;
+import models.Address;
 
 /**
  *
@@ -35,8 +38,10 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
     private FXPhoneView numberView;
     private FXEditPersonView editView;
     private FXEditAddressView editAddressView;
+    private FXSearchView<Address> addressSearch;
     
     private PhoneRepository phoneDb;
+    private AddressRepository addressDb;
     
     private Label firstNameLabel;
     private Label lastNameLabel;
@@ -46,12 +51,17 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
     private Text lastNameValue;
     private Text addressText;
     private FXListSelector<PhoneNumber, FXPhoneView> contacts;
+    private Button newAddressButton;
+    private Button changeAddressButton;
     private Button editPersonButton;
     private Button editAddressButton;
     private Button addPhoneNumberBtn;
     private Button removePhoneNumberBtn;
+    private Button savePersonBtn;
+    // TODO hide button when not needed
     
     private boolean addingMode;
+    private EventHandler<ActionEvent> updateHandler;
     
     private ObservableList<PhoneNumber> numbers;
     private StandardGridPane root;
@@ -60,7 +70,7 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
     @Override
     public void start(Stage primaryStage) {
         
-        EventHandler<ActionEvent> updateHandler = new EventHandler<ActionEvent>() {
+        EventHandler<ActionEvent> uHandler = new EventHandler<ActionEvent>() {
             
             @Override
             public void handle(ActionEvent event) {
@@ -74,6 +84,7 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
                     phoneDb.addRecord(newPhone);
                     phoneDb.saveList();
                     shownPerson.getPhoneList().add(newPhone);
+                    contacts.getItems().add(newPhone);
                     numberView.setAddingMode(false);
                 }
                 contacts.refresh();
@@ -82,16 +93,27 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
         
         stage = primaryStage;
         numberView = new FXPhoneView();
-        numberView.setOnUpdate(updateHandler);
+        numberView.setOnUpdate(uHandler);
         numberView.start(new Stage());
         
         editView = new FXEditPersonView();
-        editView.setOnUpdate(updateHandler);
+        editView.setOnUpdate(uHandler);
         editView.start(new Stage());
         
         editAddressView = new FXEditAddressView();
-        editAddressView.setOnUpdate(updateHandler);
+        editAddressView.setOnUpdate(uHandler);
         editAddressView.start(new Stage());
+        
+        addressSearch = new FXSearchView<>();
+        addressSearch.setOnUpdate(new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) {
+                // TODO implement 
+                shownPerson.setAddress(addressSearch.getItem());
+                addressText.setText(shownPerson.getAddressString());
+            };
+        });
         
         firstNameLabel = new Label("First name: ");
         lastNameLabel = new Label("Last name: ");
@@ -103,7 +125,6 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
         addressText = new Text();
         
         contacts = new FXListSelector<>();
-        contacts.setItems(numbers);
         contacts.setTooltip("Click a number to edit it");
         contacts.setReceiver(numberView);
         
@@ -117,6 +138,27 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
             }
         });
         
+        changeAddressButton = new Button("Change address");
+        changeAddressButton.setOnAction(new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) {
+                System.out.println("Switching address...");
+                addressSearch.show(addressDb.getList());
+            }
+        });
+        
+        newAddressButton = new Button("New");
+        newAddressButton.setOnAction(new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) {
+                System.out.println("Adding address...");
+                editAddressView.receive(addressDb.make());
+                editAddressView.setAddingMode(true);
+            }
+        });
+        
         editAddressButton = new Button("Edit address");
         editAddressButton.setOnAction(new EventHandler<ActionEvent>() {
             
@@ -124,6 +166,7 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
             public void handle(ActionEvent event) {
                 System.out.println("Editing address...");
                 editAddressView.receive(shownPerson.getAddress());
+                editAddressView.setAddingMode(false);
             }
         });
         
@@ -148,6 +191,18 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
             }
         });
         
+        savePersonBtn = new Button("Save");
+        savePersonBtn.setOnAction(new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) {
+                System.out.println("Saving person...");
+                if (updateHandler != null)
+                    updateHandler.handle(event);
+            }
+        });
+        
+        //TODO add missing buttons
         root = new StandardGridPane();
         root.add(firstNameLabel, 0, 0);
         root.add(firstNameValue, 1, 0);
@@ -183,11 +238,16 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
     public void receive(Person person) {
         this.shownPerson = person;
         numbers = FXCollections.observableArrayList(person.getPhoneList());
+        contacts.setItems(numbers);
         firstNameValue.setText(person.getFirstName());
         lastNameValue.setText(person.getLastName());
         stage.setTitle(person.getFullName() + " - Information");
         addressText.setText(person.getAddressString());
         stage.show();
+    }
+    
+    public Person getPerson() {
+        return this.shownPerson;
     }
     
     public void close() {
@@ -217,12 +277,20 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
     public void setPhoneRepository(PhoneRepository repo) {
         phoneDb = repo;
     }
+    
+    public void setAddressRepository(AddressRepository repo) {
+        addressDb = repo;
+    }
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         launch(args);
+    }
+
+    void setOnUpdate(EventHandler<ActionEvent> eventHandler) {
+        this.updateHandler = eventHandler; //To change body of generated methods, choose Tools | Templates.
     }
     
 }

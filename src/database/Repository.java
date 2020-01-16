@@ -123,7 +123,7 @@ public abstract class Repository<T extends Record> {
         item.setId(++lastId);
         list.add(item);
         indexToReload = true;
-        // indexes[lastId] = list.size() - 1;
+        records++;
     };
     
     public T readRecord() throws IOException {
@@ -142,6 +142,13 @@ public abstract class Repository<T extends Record> {
         System.out.println("Scanned done");
     };
     
+    public T any() {
+        if (records == 0)
+            addRecord(make());
+        return list.get(records - 1);
+    }
+    
+    public abstract T make();
     public abstract T readItem() throws IOException;
     public abstract void writeItem(T rec) throws IOException;
 }

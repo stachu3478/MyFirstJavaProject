@@ -26,6 +26,13 @@ public class Person extends Record {
         contacts = new ArrayList<>();
     }
     
+    public Person(Address adr) {
+        firstName = "John";
+        lastName = "Smith";
+        address = adr;
+        contacts = new ArrayList<>();
+    }
+    
     public String getFirstName(){
         return this.firstName;
     }

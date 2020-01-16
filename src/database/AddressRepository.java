@@ -40,6 +40,10 @@ public class AddressRepository extends Repository<Address> {
         scannedDone();
     }
     
+    public Address make() {
+        return new Address(cityDb.any());
+    }
+    
     @Override
     public Address readItem() throws IOException {
         FileRecordReader reader = getReader();

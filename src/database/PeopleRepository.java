@@ -39,6 +39,11 @@ public class PeopleRepository extends Repository<Person> {
     }
     
     @Override
+    public Person make() {
+        return new Person(addressDb.any());
+    }
+    
+    @Override
     public Person readItem() throws IOException {
         FileRecordReader reader = getReader();
         Person person = new Person();

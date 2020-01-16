@@ -26,6 +26,11 @@ public class PostOffice extends Record {
         this.postalCode = 69029;
     }
     
+    public PostOffice(City city) {
+        this.city = city;
+        this.postalCode = 00000;
+    }
+    
     public String getCode() {
         String zip = Integer.toString(postalCode);
         zip = feed0(5 - zip.length()) + zip;

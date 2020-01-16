@@ -47,6 +47,18 @@ public class FXContactView extends Application {
         
         personView = new FXPersonView();
         personView.start(new Stage());
+        personView.setOnUpdate(new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) {
+                if (personView.getAddingMode()) {
+                    peopleDb.addRecord(personView.getPerson());
+                    peopleDb.saveList();
+                }
+                contactList.refresh();
+                // TODO disable adding mode for person
+            }
+        });
         
         contactList = new FXListSelector<Person, FXPersonView>();
         peopleDb = new PeopleRepository();
@@ -54,6 +66,7 @@ public class FXContactView extends Application {
         contactList.setTooltip("Click a contact to see details");
         contactList.setReceiver(personView);
         personView.setPhoneRepository(peopleDb.getPhoneDb());
+        personView.setAddressRepository(peopleDb.getAddressDb());
         
         filterer = new ObservableListSelector();
         filterer.setListView(contactList.getListView());
@@ -80,7 +93,7 @@ public class FXContactView extends Application {
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("Opening new window to add a new contact");
-                personView.receive(new Person());
+                personView.receive(peopleDb.make());
                 personView.setAddingMode(true);
                 // TODO disable adding mode for person
             }

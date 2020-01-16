@@ -59,6 +59,7 @@ public class FXEditAddressView extends Application implements SelectorReceiver<A
     private EventHandler<ActionEvent> updateHandler;
     
     private StandardGridPane root;
+    private boolean addingMode;
     
     @Override
     public void start(Stage primaryStage) {
@@ -135,7 +136,7 @@ public class FXEditAddressView extends Application implements SelectorReceiver<A
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("Adding city...");
-                cityView.receive(new City());
+                cityView.receive(cityDb.make());
                 cityView.setAddingMode(true);
             }
         });
@@ -253,6 +254,18 @@ public class FXEditAddressView extends Application implements SelectorReceiver<A
      */
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public void setAddingMode(boolean b) {
+        this.addingMode = b; //To change body of generated methods, choose Tools | Templates.
+        if (b)
+            stage.setTitle("New Address");
+        else
+            stage.setTitle("Edit Address");
+    }
+    
+    public boolean getAddingMode() {
+        return this.addingMode;
     }
     
 }

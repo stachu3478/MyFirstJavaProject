@@ -42,6 +42,11 @@ public class PostRepository extends Repository<PostOffice> {
     }
     
     @Override
+    public PostOffice make() {
+        return new PostOffice(cityDb.any());
+    }
+    
+    @Override
     public PostOffice readItem() throws IOException {
         FileRecordReader reader = getReader();
         PostOffice post = new PostOffice();

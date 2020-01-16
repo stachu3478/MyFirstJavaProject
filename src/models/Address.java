@@ -25,6 +25,13 @@ public class Address extends Record {
         this.inNr = 27;
     }
     
+    public Address(City city) {
+        this.city = city;
+        this.street = "Plain Street";
+        this.nr = 1;
+        this.inNr = 1;
+    }
+    
     public City getCity() {
         return this.city;
     }
