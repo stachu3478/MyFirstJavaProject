@@ -143,8 +143,10 @@ public abstract class Repository<T extends Record> {
     };
     
     public T any() {
-        if (records == 0)
+        if (records == 0) {
             addRecord(make());
+            saveList();
+        }
         return list.get(records - 1);
     }
     

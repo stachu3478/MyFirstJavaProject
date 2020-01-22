@@ -248,6 +248,10 @@ public class FXEditAddressView extends Application implements SelectorReceiver<A
     public void setCityDb(CityRepository cDb) {
         cityDb = cDb;
     }
+    
+    public Address getAddress() {
+        return this.editAddress;
+    }
 
     /**
      * @param args the command line arguments

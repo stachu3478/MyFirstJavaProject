@@ -75,10 +75,24 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("Updating interface...");
-                firstNameValue.setText(shownPerson.getFirstName());
-                lastNameValue.setText(shownPerson.getLastName());
-                stage.setTitle(shownPerson.getFullName() + " - Information");
+                if (editAddressView.getAddingMode()) {
+                    Address newAdr = editAddressView.getAddress();
+                    shownPerson.setAddress(newAdr);
+                    addressDb.addRecord(newAdr);
+                    addressDb.saveList();
+                }
                 addressText.setText(shownPerson.getAddressString());
+                if (updateHandler != null && addingMode == false) updateHandler.handle(event);
+            }
+        };
+        
+        stage = primaryStage;
+        numberView = new FXPhoneView();
+        numberView.setOnUpdate(new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) {
+                System.out.println("Updating interface...");
                 if (numberView.getAddingMode()) {
                     PhoneNumber newPhone = numberView.getPhoneNumber();
                     phoneDb.addRecord(newPhone);
@@ -88,16 +102,23 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
                     numberView.setAddingMode(false);
                 }
                 contacts.refresh();
+                if (updateHandler != null && addingMode == false) updateHandler.handle(event);
             }
-        };
-        
-        stage = primaryStage;
-        numberView = new FXPhoneView();
-        numberView.setOnUpdate(uHandler);
+        });
         numberView.start(new Stage());
         
         editView = new FXEditPersonView();
-        editView.setOnUpdate(uHandler);
+        editView.setOnUpdate(new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) {
+                System.out.println("Updating interface...");
+                firstNameValue.setText(shownPerson.getFirstName());
+                lastNameValue.setText(shownPerson.getLastName());
+                stage.setTitle(shownPerson.getFullName() + " - Information");
+                if (updateHandler != null && addingMode == false) updateHandler.handle(event);
+            }
+        });
         editView.start(new Stage());
         
         editAddressView = new FXEditAddressView();
@@ -105,6 +126,7 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
         editAddressView.start(new Stage());
         
         addressSearch = new FXSearchView<>();
+        addressSearch.start(new Stage());
         addressSearch.setOnUpdate(new EventHandler<ActionEvent>() {
             
             @Override
@@ -112,6 +134,7 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
                 // TODO implement 
                 shownPerson.setAddress(addressSearch.getItem());
                 addressText.setText(shownPerson.getAddressString());
+                if (updateHandler != null && addingMode == false) updateHandler.handle(event);
             };
         });
         
@@ -159,7 +182,7 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
             }
         });
         
-        editAddressButton = new Button("Edit address");
+        editAddressButton = new Button("Edit");
         editAddressButton.setOnAction(new EventHandler<ActionEvent>() {
             
             @Override
@@ -199,6 +222,7 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
                 System.out.println("Saving person...");
                 if (updateHandler != null)
                     updateHandler.handle(event);
+                stop();                             
             }
         });
         
@@ -208,14 +232,17 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
         root.add(firstNameValue, 1, 0);
         root.add(lastNameLabel, 2, 0);
         root.add(lastNameValue, 3, 0);
-        root.add(addressLabel, 0, 1);
-        root.add(addressText, 1, 1);
-        root.add(contactsLabel, 0, 2, 2, 1);
-        root.add(contacts.getListView(), 0, 3, 2, 1);
-        root.add(addPhoneNumberBtn, 0, 4);
-        root.add(removePhoneNumberBtn, 1, 4);
-        root.add(editPersonButton, 0, 5, 2, 1);
-        root.add(editAddressButton, 2, 4, 2, 1);
+        root.add(addressLabel, 0, 1, 1, 3);
+        root.add(addressText, 1, 1, 1, 3);
+        root.add(newAddressButton, 2, 2);
+        root.add(changeAddressButton, 2, 1, 2, 1);
+        root.add(editAddressButton, 3, 2);
+        root.add(contactsLabel, 0, 4, 2, 1);
+        root.add(contacts.getListView(), 0, 5, 2, 1);
+        root.add(addPhoneNumberBtn, 0, 6);
+        root.add(removePhoneNumberBtn, 1, 6);
+        root.add(editPersonButton, 0, 7, 2, 1);
+        root.add(savePersonBtn, 2, 7);
         
         scene = new Scene(root, 480, 360);
         
@@ -237,6 +264,7 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
     @Override
     public void receive(Person person) {
         this.shownPerson = person;
+        setAddingMode(false); // Default no adding
         numbers = FXCollections.observableArrayList(person.getPhoneList());
         contacts.setItems(numbers);
         firstNameValue.setText(person.getFirstName());
@@ -264,10 +292,12 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
     
     public void setAddingMode(boolean val) {
         addingMode = val;
-        if (val)
+        if (val) {
             stage.setTitle("New person");
+        }
         else if (shownPerson != null)
             stage.setTitle(shownPerson.getFullName() + " - Information");
+        savePersonBtn.setVisible(val);
     }
     
     public boolean getAddingMode() {

@@ -53,9 +53,10 @@ public class FXContactView extends Application {
             public void handle(ActionEvent event) {
                 if (personView.getAddingMode()) {
                     peopleDb.addRecord(personView.getPerson());
-                    peopleDb.saveList();
                 }
+                peopleDb.saveList();
                 contactList.refresh();
+                System.out.println("People updated");
                 // TODO disable adding mode for person
             }
         });
