@@ -89,7 +89,6 @@ public class FXSearchView<T> extends Application {
         root.add(discardButton, 1, 2);
         
         scene = new Scene(root, 480, 360);
-        //scene.getStylesheets().add(FXContactView.class.getResource("FXContactView.css").toExternalForm());
         
         stage.setTitle("Select");
         stage.setScene(scene);
@@ -125,6 +124,10 @@ public class FXSearchView<T> extends Application {
     
     public void stop() {
         stage.close();
+    }
+    
+    public void refresh() {
+        filterer.refresh();
     }
 
     /**

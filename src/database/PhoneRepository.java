@@ -42,6 +42,7 @@ public class PhoneRepository extends Repository<PhoneNumber> {
         PhoneNumber phone = new PhoneNumber();
         phone.setCountry(CountryRepository.getRepository().getById(reader.readInteger()));
         phone.setNumberInt(reader.readInteger());
+        phone.setPersonId(reader.readInteger());
         return phone;
     };
     
@@ -50,5 +51,6 @@ public class PhoneRepository extends Repository<PhoneNumber> {
         FileRecordReader writer = getReader();
         writer.writeInteger(phone.getCountry().getId());
         writer.writeInteger(phone.getNumberInt());
+        writer.writeInteger(phone.getPersonId());
     };
 }

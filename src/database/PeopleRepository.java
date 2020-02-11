@@ -7,7 +7,6 @@ package database;
 
 import java.io.IOException;
 import javafx.collections.ObservableList;
-import models.Address;
 import models.Person;
 import models.PhoneNumber;
 
@@ -19,7 +18,6 @@ public class PeopleRepository extends Repository<Person> {
     private static final String filename = "people.db";
     private PhoneRepository phoneDb;
     private AddressRepository addressDb;
-    // TODO fix address repository initialization
     
     private void standardInit() {
         try {

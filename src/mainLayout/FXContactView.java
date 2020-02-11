@@ -9,8 +9,6 @@ package mainLayout;
 import database.PeopleRepository;
 import models.Person;
 import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -57,7 +55,6 @@ public class FXContactView extends Application {
                 peopleDb.saveList();
                 contactList.refresh();
                 System.out.println("People updated");
-                // TODO disable adding mode for person
             }
         });
         
@@ -72,11 +69,9 @@ public class FXContactView extends Application {
         filterer = new ObservableListSelector();
         filterer.setListView(contactList.getListView());
         
-        // TODO Add search contacts text
         searchText = new Label("Search contacts: ");
         searchText.getStyleClass().add("search-label");
         
-        // add search input
         searchInput = new TextField();
         searchInput.getStyleClass().add("search-input");
         searchInput.setTooltip(new Tooltip("Enter any text to search contacts by names"));
@@ -86,7 +81,6 @@ public class FXContactView extends Application {
             filterer.applyFilter(newValue);
         });
         
-        // Add contacts button
         searchButton = new Button("Add new contact");
         searchButton.getStyleClass().add("search-button");
         searchButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -96,7 +90,6 @@ public class FXContactView extends Application {
                 System.out.println("Opening new window to add a new contact");
                 personView.receive(peopleDb.make());
                 personView.setAddingMode(true);
-                // TODO disable adding mode for person
             }
         });
         

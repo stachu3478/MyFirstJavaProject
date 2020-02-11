@@ -8,7 +8,6 @@ package database;
 import java.io.IOException;
 import javafx.collections.ObservableList;
 import models.City;
-import models.PostOffice;
 
 /**
  *
@@ -52,7 +51,6 @@ public class CityRepository extends Repository<City> {
         City city = new City();
         city.setName(reader.readString());
         city.setPostId(reader.readInteger());
-        // city.setPostOffice(PostRepository.getRepository().getById(reader.readInteger()));
         return city;
     };
     

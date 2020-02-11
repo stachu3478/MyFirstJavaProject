@@ -7,7 +7,6 @@ package database;
 
 import java.io.IOException;
 import javafx.collections.ObservableList;
-import models.City;
 import models.PostOffice;
 
 /**
@@ -63,7 +62,6 @@ public class PostRepository extends Repository<PostOffice> {
     };
     
     public void scannedDone() {
-        // TODO implement cit bind
         ObservableList<PostOffice> rList = getList();
         for (int i = 0; i < rList.size(); i++) {
             PostOffice post = rList.get(i);

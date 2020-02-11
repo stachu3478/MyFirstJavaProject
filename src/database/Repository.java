@@ -126,6 +126,10 @@ public abstract class Repository<T extends Record> {
         records++;
     };
     
+    public void removeRecord(T item) {
+        list.remove(item);
+    }
+    
     public T readRecord() throws IOException {
         int id = reader.readInteger();
         T item = readItem();

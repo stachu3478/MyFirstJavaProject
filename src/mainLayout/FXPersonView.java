@@ -17,6 +17,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -58,7 +59,6 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
     private Button addPhoneNumberBtn;
     private Button removePhoneNumberBtn;
     private Button savePersonBtn;
-    // TODO hide button when not needed
     
     private boolean addingMode;
     private EventHandler<ActionEvent> updateHandler;
@@ -79,9 +79,9 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
                     Address newAdr = editAddressView.getAddress();
                     shownPerson.setAddress(newAdr);
                     addressDb.addRecord(newAdr);
-                    addressDb.saveList();
                 }
                 addressText.setText(shownPerson.getAddressString());
+                addressDb.saveList();
                 if (updateHandler != null && addingMode == false) updateHandler.handle(event);
             }
         };
@@ -95,11 +95,14 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
                 System.out.println("Updating interface...");
                 if (numberView.getAddingMode()) {
                     PhoneNumber newPhone = numberView.getPhoneNumber();
+                    newPhone.setPersonId(shownPerson.getId());
+                    System.out.println(shownPerson.getId());
                     phoneDb.addRecord(newPhone);
                     phoneDb.saveList();
                     shownPerson.getPhoneList().add(newPhone);
                     contacts.getItems().add(newPhone);
                     numberView.setAddingMode(false);
+                    
                 }
                 contacts.refresh();
                 if (updateHandler != null && addingMode == false) updateHandler.handle(event);
@@ -131,7 +134,6 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
             
             @Override
             public void handle(ActionEvent event) {
-                // TODO implement 
                 shownPerson.setAddress(addressSearch.getItem());
                 addressText.setText(shownPerson.getAddressString());
                 if (updateHandler != null && addingMode == false) updateHandler.handle(event);
@@ -211,6 +213,11 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("Removing phone...");
+                ListView<PhoneNumber> list = contacts.getListView();
+                PhoneNumber item = list.getSelectionModel().getSelectedItem();
+                phoneDb.removeRecord(item); // remove number from db
+                list.getItems().remove(item); // remove from front list
+                phoneDb.saveList();
             }
         });
         
@@ -226,7 +233,6 @@ public class FXPersonView extends Application implements SelectorReceiver<Person
             }
         });
         
-        //TODO add missing buttons
         root = new StandardGridPane();
         root.add(firstNameLabel, 0, 0);
         root.add(firstNameValue, 1, 0);

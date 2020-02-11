@@ -31,7 +31,8 @@ public class FXListSelector<T, V extends SelectorReceiver<T>> {
                 if (selected != newSelection || doubleClick) {
                     selected = newSelection;
                     doubleClick = false;
-                    receiver.receive(listView.getItems().get(selected));
+                    if (selected != -1)
+                        receiver.receive(listView.getItems().get(selected));
                 } else if (selected != -1) {
                     doubleClick = true;
                 }

@@ -10,7 +10,6 @@ import models.PhoneNumber;
 import models.Country;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -59,7 +58,6 @@ public class FXPhoneView extends Application implements SelectorReceiver<PhoneNu
         countryValue = new ChoiceBox();
         ObservableList<Country> countries = new CountryRepository().getList().sorted();
         countryValue.setItems(countries);
-        // TODO add countries to choice box
         
         saveButton = new Button("Save");
         saveButton.setOnAction(new EventHandler<ActionEvent>() {

@@ -58,4 +58,8 @@ public class ObservableListSelector<T> {
         this.itemList = preList.filtered(filter);
         frontList.setItems(itemList);
     }
+    
+    public void refresh() {
+        frontList.refresh();
+    }
 }
